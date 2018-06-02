@@ -4,7 +4,7 @@ Console app to download data on Baugenehmigungen (building permits) from the [Tr
 
 ## Getting Started
 
-The [Transparenz](http://www.hamburg.de/transparenzgesetz/)portal Hamburg provides an [API](http://transparenz.hamburg.de/hinweise-zur-api/) to search and download public documents, including [Baugenehmigungen](http://www.hamburg.de/baugenehmigung/).
+The Transparenzportal Hamburg provides an [API](http://transparenz.hamburg.de/hinweise-zur-api/) to search and download public documents as required by the [Transparenzgesetz](http://www.hamburg.de/transparenzgesetz/). This application is used to download [Baugenehmigungen](http://www.hamburg.de/baugenehmigung/) from the portal, but could be used as a template to download other data.
 
 ### Prerequisites
 
@@ -16,11 +16,11 @@ Open the .sln file, build and run the application in Visual Studio. The download
 
 ## The Transparenzportal API
 
-As explained on the [Transparenzportal webpage](http://transparenz.hamburg.de/hinweise-zur-api/), the portal uses the [CKAN](http://docs.ckan.org/en/latest/api/index.html) platform. Even with this standard, accessing data depends on how the data is structured and stored in the *extras* dictionaries (see below).
+As explained on the [Transparenzportal webpage](http://transparenz.hamburg.de/hinweise-zur-api/), the portal builds on the [CKAN](http://docs.ckan.org/en/latest/api/index.html) platform. Even using this standard, accessing data depends on how the data is structured and stored in the *extras* dictionaries (see below).
 
 ### Downloading data
 
-This simple app uses the CKAN *package search*. It first [retrieves possible tags](http://suche.transparenz.hamburg.de/api/3/action/tag_list) (in this case variations of the term *Baugenehmigung*), then calls [(http://suche.transparenz.hamburg.de/api/3/action/package_search](http://suche.transparenz.hamburg.de/api/3/action/package_search?rows=100&start=1&fq=tags:Baugenehmigung) repeatedly. Downloaded data is first saved in the original format (in the *bin\Debug\Downloads* subdirectory), then the relevant data is extracted and saved in *bin\Debug\baugenehmigungen.csv*). 
+This simple app uses the CKAN *package search*. It first [retrieves possible tags](http://suche.transparenz.hamburg.de/api/3/action/tag_list) (in this case variations of the term *Baugenehmigung*), then calls [http://suche.transparenz.hamburg.de/api/3/action/package_search](http://suche.transparenz.hamburg.de/api/3/action/package_search?rows=10&start=1&fq=tags:Baugenehmigung) repeatedly. Downloaded data is first saved in the original format (in the *bin\Debug\Downloads* subdirectory), then the relevant data is extracted and saved in *bin\Debug\baugenehmigungen.csv*). 
 
 ### Data format
 
