@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 
 namespace TransparenzportalDownload
 {
@@ -46,31 +45,33 @@ namespace TransparenzportalDownload
 
             var result = new List<Baugenehmigung>();
 
-            var webClient = new WebClient();
+            using (var webClient = new WebClient())
+            { 
 
-            int lastRowCount = 0;
-            int currentPage = 0;
+                int lastRowCount = 0;
+                int currentPage = 0;
 
-            do
-            {
-                var url = string.Format(detailUrl, RowsPerPage, currentPage * RowsPerPage, tag);
-                var file = Path.Combine(DownloadDirectory,
-                    string.Format("{0}_{1}.json", DateTime.Now.ToString("yyyy_MM_dd_hhmmss"), currentPage));
+                do
+                {
+                    var url = string.Format(detailUrl, RowsPerPage, currentPage * RowsPerPage, tag);
+                    var file = Path.Combine(DownloadDirectory,
+                        string.Format("{0}_{1}.json", DateTime.Now.ToString("yyyy_MM_dd_hhmmss"), currentPage));
 
-                // instead of webClient.DownloadString(), make local copies so that the 
-                // same data can be used again without downloading:
-                webClient.DownloadFile(url, file);
-                var s = ReadFromFile(file);
+                    // instead of webClient.DownloadString(), make local copies so that the 
+                    // same data can be used again without downloading:
+                    webClient.DownloadFile(url, file);
+                    var s = ReadFromFile(file);
 
-                var packages = JsonParser.ParseJson(s);
-                result.AddRange(packages);
+                    var packages = JsonParser.ParseJson(s);
+                    result.AddRange(packages);
 
-                lastRowCount = packages.Count();
-                currentPage++;
+                    lastRowCount = packages.Count();
+                    currentPage++;
 
-                Console.WriteLine($"Found {lastRowCount} more results.");
+                    Console.WriteLine($"Found {lastRowCount} more results.");
 
-            } while (lastRowCount == RowsPerPage);
+                } while (lastRowCount == RowsPerPage);
+            }
 
             Console.WriteLine($"Found a total {result.Count} results for tag \"{tag}\".");
 

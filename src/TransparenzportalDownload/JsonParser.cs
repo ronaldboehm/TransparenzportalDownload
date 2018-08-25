@@ -1,35 +1,30 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 
 namespace TransparenzportalDownload
 {
     public static class JsonParser
     {
 
-        public static IList<Baugenehmigung> ParseJson(string jsonText, string packagesNodeName = "results")
+        public static IList<Baugenehmigung> ParseJson(string jsonText)
         {
             var result = new List<Baugenehmigung>();
-            var deserializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
 
-            dynamic json = deserializer.DeserializeObject(jsonText);
+            dynamic json = JsonConvert.DeserializeObject(jsonText);
 
-            // depending on the call, the results will either be in a node called "packages" or "results":
-            var packages = json["result"][packagesNodeName] as IEnumerable<object>;
+            dynamic packages = json.result.results;
 
             foreach (dynamic package in packages)
             {
                 var b = new Baugenehmigung
                 {
-                    Title          = (package["title"] as string).Replace(Environment.NewLine, " "),
+                    Title          = (package.title.ToString()).Replace(Environment.NewLine, " "),
                     PublishingDate = GetValue(package, "exact_publishing_date").Substring(0, 10), // e.g.  "2016-04-29T20:14:48",
                     Number         = GetValue(package, "number"),
                     FileReference  = GetValue(package, "file_reference_digital"),
-                    Author         = package["author"],
-                    Id             = package["id"],
+                    Author         = package.author,
+                    Id             = package.id,
                     Tags           = GetTagsFromPackage(package)
                 };
 
@@ -39,15 +34,23 @@ namespace TransparenzportalDownload
             return result;
         }
 
+        public class DeserializedJson
+        {
+            public string Title { get; set; }
+            public string Author { get; set; }
+            public string Id { get; set; }
+            public Dictionary<string, string> Extras { get; set; }
+        }
+
         public static IEnumerable<string> GetTagsFromPackage(dynamic package)
         {
             var result = new List<string>();
 
-            var tags = package["tags"] as object[];
+            dynamic tags = package.tags;
 
             foreach (dynamic tag in tags)
             {
-                result.Add(tag["name"] as string);
+                result.Add(tag.name.ToString());
             }
 
             return result;
@@ -55,7 +58,7 @@ namespace TransparenzportalDownload
 
         public static string GetValue(dynamic package, string key)
         {
-            var extras = package["extras"] as object[];
+            dynamic extras = package.extras;
 
             // e.g.
             //"extras": [
@@ -74,9 +77,9 @@ namespace TransparenzportalDownload
 
             foreach (dynamic extra in extras)
             {
-                if (extra["key"] == key)
+                if (extra.key == key)
                 {
-                    return extra["value"];
+                    return extra.value;
                 }
             }
 
