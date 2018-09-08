@@ -34,14 +34,6 @@ namespace TransparenzportalDownload
             return result;
         }
 
-        public class DeserializedJson
-        {
-            public string Title { get; set; }
-            public string Author { get; set; }
-            public string Id { get; set; }
-            public Dictionary<string, string> Extras { get; set; }
-        }
-
         public static IEnumerable<string> GetTagsFromPackage(dynamic package)
         {
             var result = new List<string>();
