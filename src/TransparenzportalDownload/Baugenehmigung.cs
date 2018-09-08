@@ -39,7 +39,7 @@ namespace TransparenzportalDownload
             }
         }
 
-        public static string Header = "Nummer;Title;Date;Author;Tags;Id;FileReference;Flurstück;Gemarkung;Baublock;Bebauungsplan;Baustufenplan";
+        public static string Header = "nummer;title;publishingdate;author;tags;id;filereference;flurstueck;gemarkung;baublock;bebauungsplan;baustufenplan";
 
         public override string ToString()
         {
