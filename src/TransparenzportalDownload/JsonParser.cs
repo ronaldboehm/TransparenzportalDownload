@@ -20,7 +20,7 @@ namespace TransparenzportalDownload
                 var b = new Baugenehmigung
                 {
                     Title          = (package.title.ToString()).Replace(Environment.NewLine, " "),
-                    PublishingDate = GetValue(package, "exact_publishing_date").Substring(0, 10), // e.g.  "2016-04-29T20:14:48",
+                    PublishingDate = GetValue(package, "exact_publishing_date"),
                     Number         = GetValue(package, "number"),
                     FileReference  = GetValue(package, "file_reference_digital"),
                     Author         = package.author,
@@ -71,6 +71,12 @@ namespace TransparenzportalDownload
             {
                 if (extra.key == key)
                 {
+                    if (key == "exact_publishing_date")
+                    {
+                        DateTime date = extra.value;
+                        return ((DateTime)date).ToString("yyyy-MM-dd");
+                    }
+
                     return extra.value;
                 }
             }
