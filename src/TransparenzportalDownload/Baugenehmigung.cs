@@ -43,7 +43,35 @@ namespace TransparenzportalDownload
 
         public override string ToString()
         {
-            return $"\"{Number}\";\"{Title}\";\"{PublishingDate}\";\"{Author}\";\"{TagsAsString}\";\"{Id}\";\"{FileReference}\";\"{Flurstueck}\";\"{Gemarkung}\";\"{Baublock}\";\"{Bebauungsplan}\";\"{Baustufenplan}\";";
+            var sb = new StringBuilder();
+
+            sb.Append(Quoted(Number));
+            sb.Append(Quoted(Title));
+            sb.Append(Quoted(PublishingDate));
+            sb.Append(Quoted(Author));
+            sb.Append(Quoted(TagsAsString));
+            sb.Append(Quoted(Id));
+            sb.Append(Quoted(FileReference));
+            sb.Append(Quoted(Flurstueck));
+            sb.Append(Quoted(Gemarkung));
+            sb.Append(Quoted(Baublock));
+            sb.Append(Quoted(Bebauungsplan));
+            sb.Append(Quoted(Baustufenplan, insertTrailingDelimiter: false));
+
+            return sb.ToString();
+        }
+
+        private const string Delimiter = ";";
+
+        private string Quoted(string value, bool insertTrailingDelimiter = true)
+        {
+            value = value.Replace(Environment.NewLine, " ");
+            value = value.Replace("\n", " ");
+            value = value.Replace("\"", "\"\""); // Excel will interpret all pairs of double-quotes ("") with single double-quotes(").
+
+            return insertTrailingDelimiter
+                ? $"\"{value}\"{Delimiter}"
+                : $"\"{value}\"";
         }
 
         private string TagsAsString
