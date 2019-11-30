@@ -98,13 +98,14 @@ namespace TransparenzportalDownload
             foreach (var n in parts)
             {
                 // e.g. "5696 (Flurstück)"
-                var valueAndKey = n.Trim().Split(' ');
+                var s = n.Trim();
 
-                if (valueAndKey.Count() != 2)
+                var idx = s.LastIndexOf("(");
+                if (idx == -1)
                     continue;
 
-                var value = valueAndKey[0];
-                var key    = valueAndKey[1].Trim('(', ')', ' ');
+                var value = s.Substring(0, idx).Trim(' ');
+                var key   = s.Substring(idx, s.Length - idx).Trim('(', ')', ' ');
 
                 // the numbers text may contain some keys multiple times, e.g. Flurstück
                 if (this.numbers.ContainsKey(key))
